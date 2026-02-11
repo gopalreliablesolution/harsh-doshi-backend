@@ -13,7 +13,17 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       subtotal,
       shippingTotal,
       currency
-    } = req.body;
+    } = req.body as {
+      orderId?: string;
+      customerEmail?: string;
+      customerName?: string;
+      shippingAddress?: any;
+      items?: any[];
+      total?: number;
+      subtotal?: number;
+      shippingTotal?: number;
+      currency?: string;
+    };
 
     // Debug logging
     console.log('Email Data Received:', {
@@ -22,7 +32,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       subtotal,
       shippingTotal,
       currency,
-      itemPrices: items.map((i: any) => ({ title: i.title, price: i.price }))
+      itemPrices: items?.map((i: any) => ({ title: i.title, price: i.price })) || []
     });
 
     // Configure email transporter (Gmail example)
@@ -58,7 +68,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     };
 
     // Generate items HTML
-    const itemsHtml = items.map((item: any) => `
+    const itemsHtml = (items || []).map((item: any) => `
       <tr>
         <td style="padding: 15px; border-bottom: 1px solid #eee;">
           <img src="${item.image}" alt="${item.title}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">

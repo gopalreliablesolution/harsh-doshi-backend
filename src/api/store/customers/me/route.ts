@@ -43,7 +43,7 @@ export async function PUT(req: MedusaRequest, res: MedusaResponse) {
   }
 
   const customerService = req.scope.resolve(Modules.CUSTOMER);
-  const { first_name, last_name, phone } = req.body;
+  const { first_name, last_name, phone } = req.body as { first_name?: string; last_name?: string; phone?: string };
 
   try {
     // Find customer by email

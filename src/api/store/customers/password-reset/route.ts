@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
-  const { email } = req.body;
+  const { email } = req.body as { email?: string };
 
   if (!email) {
     return res.status(400).json({ message: "Email is required" });

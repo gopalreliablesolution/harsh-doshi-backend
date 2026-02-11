@@ -46,7 +46,7 @@ export default async function setupShipping({ container }: ExecArgs) {
 
         if (!indiaZone) {
             logger.info("Creating India Service Zone...");
-            indiaZone = await fulfillmentModule.createServiceZones({
+            const zones: any = await fulfillmentModule.createServiceZones({
                 name: "India",
                 fulfillment_set_id: fulfillmentSetId,
                 geo_areas: [
@@ -56,6 +56,12 @@ export default async function setupShipping({ container }: ExecArgs) {
                     }
                 ]
             } as any);
+            indiaZone = Array.isArray(zones) ? zones[0] : zones;
+        }
+
+        if (!indiaZone?.id) {
+            logger.error("Failed to create or find India service zone");
+            return;
         }
 
         logger.info(`Using Service Zone: ${indiaZone.id}`);

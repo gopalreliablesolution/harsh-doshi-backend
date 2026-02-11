@@ -11,7 +11,15 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       size,
       productImage,
       timestamp
-    } = req.body;
+    } = req.body as {
+      type?: string;
+      productTitle?: string;
+      productId?: string;
+      metal?: string;
+      size?: string;
+      productImage?: string;
+      timestamp?: string;
+    };
 
     // Configure email transporter
     const transporter = nodemailer.createTransport({
@@ -53,7 +61,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
               <p><strong>Product ID:</strong> ${productId}</p>
               <p><strong>Selected Metal:</strong> ${metal}</p>
               <p><strong>Selected Size:</strong> ${size}</p>
-              <p><strong>Enquiry Time:</strong> ${new Date(timestamp).toLocaleString()}</p>
+              <p><strong>Enquiry Time:</strong> ${timestamp ? new Date(timestamp).toLocaleString() : 'N/A'}</p>
             </div>
             
             <p>A customer has shown interest in this product. Please follow up accordingly.</p>

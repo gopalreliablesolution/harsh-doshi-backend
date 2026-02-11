@@ -2,7 +2,7 @@ import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import jwt from "jsonwebtoken";
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
-  const { token, password } = req.body;
+  const { token, password } = req.body as { token?: string; password?: string };
 
   if (!token || !password) {
     return res.status(400).json({ message: "Token and password are required" });
