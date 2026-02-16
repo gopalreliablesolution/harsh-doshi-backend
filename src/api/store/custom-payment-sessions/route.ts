@@ -26,7 +26,7 @@ export async function POST(req: any, res: any) {
     }
 
     try {
-        const backendUrl = "http://localhost:9000";
+        const backendUrl = process.env.MEDUSA_BACKEND_URL || "http://localhost:9000";
         const apiKey = req.headers["x-publishable-api-key"] as string;
 
         // Handle different actions

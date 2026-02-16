@@ -22,17 +22,19 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
   try {
     console.log("Processing /me request");
 
-    // 1. Get the Auth Identity to find the real email
-    console.log("Looking up AuthIdentity:", authIdentityId);
-    const authIdentity = await authService.retrieveAuthIdentity(authIdentityId);
-    console.log("Found AuthIdentity:", JSON.stringify(authIdentity, null, 2));
+    // 1. Get the provider identity to find the email
+    console.log("Looking up provider identity for:", authIdentityId);
+    const providerIdentities = await authService.listProviderIdentities({
+      auth_identity_id: authIdentityId
+    });
+    console.log("Provider identities:", JSON.stringify(providerIdentities, null, 2));
 
-    // Get email from provider_identities
-    const email = (authIdentity as any).provider_identities?.[0]?.entity_id || (authIdentity as any).entity_id;
+    // Extract email from the provider identity
+    const email = providerIdentities?.[0]?.entity_id;
     console.log("Extracted email:", email);
 
     if (!email) {
-      console.error("No email found in identity");
+      console.error("No email found in provider identities");
       return res.status(400).json({ message: "No email associated with this account" });
     }
 
@@ -74,9 +76,11 @@ export async function PUT(req: MedusaRequest, res: MedusaResponse) {
   const { first_name, last_name, phone } = req.body as { first_name?: string; last_name?: string; phone?: string };
 
   try {
-    // 1. Get the Auth Identity to find the real email
-    const authIdentity = await authService.retrieveAuthIdentity(authIdentityId);
-    const email = (authIdentity as any).provider_identities?.[0]?.entity_id || (authIdentity as any).entity_id;
+    // 1. Get the provider identity to find the email
+    const providerIdentities = await authService.listProviderIdentities({
+      auth_identity_id: authIdentityId
+    });
+    const email = providerIdentities?.[0]?.entity_id;
 
     // 2. Find customer by email
     const customers = await customerService.listCustomers({

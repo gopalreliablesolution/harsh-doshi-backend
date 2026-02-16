@@ -21,6 +21,14 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       timestamp?: string;
     };
 
+    // Check if email sending is enabled
+    const emailEnabled = process.env.EMAIL_ENABLED === 'true' || process.env.EMAIL_ENABLED === 'on';
+
+    if (!emailEnabled) {
+      console.log('Email sending is disabled. Skipping enquiry email.');
+      return res.json({ success: true, message: 'Email sending disabled (simulated success)' });
+    }
+
     // Configure email transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',

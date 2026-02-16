@@ -15,7 +15,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 
   try {
     const customers = await customerService.listCustomers({ email });
-    
+
     if (customers.length === 0) {
       return res.json({ message: "If email exists, reset link will be sent" });
     }
@@ -28,6 +28,15 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     );
 
     const resetUrl = `${process.env.STORE_CORS?.split(',')[0]}/reset-password.html?token=${token}`;
+
+    // Check if email sending is enabled
+    const emailEnabled = process.env.EMAIL_ENABLED === 'true' || process.env.EMAIL_ENABLED === 'on';
+
+    if (!emailEnabled) {
+      console.log('Email sending is disabled. Skipping password reset email.');
+      console.log('Reset URL would be:', resetUrl); // Log for debugging when disabled
+      return res.json({ message: "If email exists, reset link will be sent" });
+    }
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",

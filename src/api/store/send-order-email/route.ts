@@ -25,6 +25,14 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       currency?: string;
     };
 
+    // Check if email sending is enabled
+    const emailEnabled = process.env.EMAIL_ENABLED === 'true' || process.env.EMAIL_ENABLED === 'on';
+
+    if (!emailEnabled) {
+      console.log('Email sending is disabled. Skipping order confirmation email.');
+      return res.json({ success: true, message: 'Email sending disabled (simulated success)' });
+    }
+
     // Debug logging
     console.log('Email Data Received:', {
       orderId,
@@ -50,7 +58,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       // So 12345.45 rupees = 1234545 paise
       // We always divide by 100 to convert paise to rupees
       const actualAmount = amount / 100;
-      return currency === 'inr' 
+      return currency === 'inr'
         ? `₹${actualAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         : `$${actualAmount.toFixed(2)}`;
     };
