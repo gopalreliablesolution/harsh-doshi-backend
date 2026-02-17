@@ -6,13 +6,15 @@ export default defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     // Commented out SSL for local development - uncomment for production with SSL
-    databaseDriverOptions: {
-      connection: {
-        ssl: {
-          rejectUnauthorized: false
-        }
-      }
-    },
+    databaseDriverOptions:  process.env.NODE_ENV === 'production'
+        ? {
+            connection: {
+              ssl: {
+                rejectUnauthorized: false
+              }
+            }
+          }
+        : {},
     http: {
       port: Number(process.env.PORT) || 9000,
       storeCors: process.env.STORE_CORS!,
