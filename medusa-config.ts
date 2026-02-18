@@ -2,21 +2,18 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
-export default defineConfig({
+module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     // Commented out SSL for local development - uncomment for production with SSL
-    databaseDriverOptions:  process.env.NODE_ENV === 'production'
-        ? {
-            connection: {
-              ssl: {
-                rejectUnauthorized: false
-              }
-            }
-          }
-        : {},
+    // databaseDriverOptions: {
+    //   connection: {
+    //     ssl: {
+    //       rejectUnauthorized: false
+    //     }
+    //   }
+    // },
     http: {
-      port: Number(process.env.PORT) || 9000,
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
       authCors: process.env.AUTH_CORS!,
