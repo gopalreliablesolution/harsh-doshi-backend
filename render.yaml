@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: harssh-doshi-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: harssh-doshi-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: PORT
+        value: 9000
+      - key: STORE_CORS
+        sync: false
+      - key: ADMIN_CORS
+        sync: false
+      - key: AUTH_CORS
+        sync: false
+
+databases:
+  - name: harssh-doshi-db
+    databaseName: harsshdoshi
+    plan: free
+    region: oregon
