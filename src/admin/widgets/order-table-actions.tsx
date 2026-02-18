@@ -183,7 +183,7 @@ const OrderTableActions = ({ data }: { data: any }) => {
 }
 
 export const config = defineWidgetConfig({
-  zone: "order.list.table.actions",
+  zone: "order.details.before",
 })
 
 export default OrderTableActions
