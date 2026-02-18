@@ -6,13 +6,13 @@ module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
     // Commented out SSL for local development - uncomment for production with SSL
-    // databaseDriverOptions: {
-    //   connection: {
-    //     ssl: {
-    //       rejectUnauthorized: false
-    //     }
-    //   }
-    // },
+    databaseDriverOptions: {
+      connection: {
+        ssl: {
+          rejectUnauthorized: false
+        }
+      }
+    },
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
